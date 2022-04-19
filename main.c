@@ -25,6 +25,22 @@ double dexmp2(double x) {
     return 1;
 }
 
+double exmp3 (double x) {
+    return x*x - 5*x + 6;
+}
+
+double dexmp3 (double x) {
+    return 2*x - 5;
+}
+
+double exmp4 (double x) {
+    return exp(x*x - 3);
+}
+
+double dexmp4 (double x) {
+    return exp(x*x - 3) * 2*x;
+}
+
 double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), double (*gd)(double), double a, double b, const double e, int* iteratinon) {
     double F_a = f(a) - g(a);
     double F_b = f(b) - g(b);
@@ -51,7 +67,9 @@ double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), 
             b = cross_point;
             F_b = f(cross_point) - g(cross_point);
         } else {
-            cross_point = a-   F_a / (fd(a) - gd(a));
+            double f_ = fd(a);
+            double g_ = gd(a);
+            cross_point = a - F_a / (fd(a) - gd(a));
             if (fabs(a - cross_point) < e) return a;
             a = cross_point;
             F_a = f(cross_point) - g(cross_point);
@@ -62,7 +80,7 @@ double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), 
 }
 
 
-double get_integral(double (*f)(double), double (*g)(double), const double a, const double b, int * iterations) {
+double get_integral(double (*f)(double), double (*g)(double), const double a, const double b, double eps, int * iterations) {
     int n= 10;
     *iterations = 0;
     double sum_0 = 0;
@@ -87,11 +105,11 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
         n *= 2;
         h = (b - a) / n;
         sum_1 = 0;
-        for (int i = 1; i < 2*n; i += 2) {
-            sum_1 += f(a + i*n) - g(a + i*h);
+        for (int i = 1; i < n; i += 2) {
+            sum_1 += f(a + i*h) - g(a + i*h);
         }
         I_2n = h/3 * (F_0 + 4 * sum_1 + 2 * sum_0 + F_n);
-    } while (1/15 * fabs(I_n - I_2n));
+    } while (1/15 * fabs(I_n - I_2n) > eps);
 
     return I_2n;
 }
@@ -99,7 +117,16 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
 
 int main() {
     int it = 0;
+    double p1 =  get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it);
+    double p2 =  get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it);
     printf("%lf ", get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it));
-    printf("%lf", get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it));
+    printf("%lf \n", get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it));
+    printf("%lf \n", get_integral(exmp1, exmp2, p1, p2,0.00001, &it));
+    printf("%lf ", get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it));
+    printf("%lf \n", get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it));
+    printf("%lf \n", get_integral(exmp3, exmp4,
+                                  get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it),
+                                  get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it),
+                                  0.00001, &it));
     return 0;
 }
