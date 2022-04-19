@@ -9,20 +9,26 @@
 ///get_val_f3.asm
 
 
-double get_val(const double x, const int num_func) {
-    return 1;
+double exmp1(double x) {
+    return x * x;
 }
 
-
-double get_first_p(const double x, const int num_func) {
-    return 1;
+double dexmp1(double x) {
+    return 2 * x;
 }
 
+double exmp2(double x) {
+    return x;
+}
+
+double dexmp2(double x) {
+    return 1;
+}
 
 double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), double (*gd)(double), double a, double b, const double e, int* iteratinon) {
     double F_a = f(a) - g(a);
     double F_b = f(b) - g(b);
-    iteratinon = 0;
+
 
 
     while (fabs(a - b) > e) {
@@ -41,16 +47,18 @@ double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), 
         double cross_point;
         if (first_p * second_p > 0) {
             cross_point = b - F_b / (fd(b) - gd(b));
+            if (fabs(b - cross_point) < e) return b;
             b = cross_point;
             F_b = f(cross_point) - g(cross_point);
         } else {
-            cross_point = F_a / (fd(a) - gd(a));
+            cross_point = a-   F_a / (fd(a) - gd(a));
+            if (fabs(a - cross_point) < e) return a;
             a = cross_point;
             F_a = f(cross_point) - g(cross_point);
         }
     }
 
-    return a;
+    return 0;
 }
 
 
@@ -90,6 +98,8 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
 
 
 int main() {
-    printf("Hello, World!\n");
+    int it = 0;
+    printf("%lf ", get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it));
+    printf("%lf", get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it));
     return 0;
 }
