@@ -1,0 +1,8 @@
+main.0 : main.c
+	gcc -c -o main.o main.c
+
+functions: functions.asm
+	nasm -f elf32 functions.o functions.asm
+
+task_6: main.o functions.0
+	gcc -o task_6 main.0 functions.o
