@@ -1,4 +1,4 @@
-%include "io.inc"
+
 
 section .data
     x dq 2.0
@@ -11,7 +11,12 @@ section .data
     c6 dq -5.0
 
 section .text
-global CMAIN
+global F1
+global F2
+global F3
+global DF1
+global DF2
+global DF3
 
 ;3(0.5/(x+1) + 1)
 F1:

@@ -4,9 +4,12 @@
 ///f1 = 3 (0.5 / (x + 1) + 1)   f' = 1.5/(x+1)^2
 ///f2 = 2.5x − 9.5              f' = 2.5
 ///f3 = 5 / x                   f' = 5/x^2
-///get_val_f1.asm
-///get_val_f2.asm
-///get_val_f3.asm
+extern double f1(double);
+extern double dfq(double);
+extern double f2(double);
+extern double df2(double);
+extern double f3(double);
+extern double df3(double);
 
 
 double exmp1(double x) {
