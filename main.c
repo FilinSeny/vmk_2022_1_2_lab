@@ -122,7 +122,7 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
 int main(int argc, char **argv) {
 	if (argc > 0) {
 		if (!strcmp(argv[1], "-help")) { 
-			printf(" -show_exm [num_exmp] \n -show_cross_points \n -show_iterations \n -get_integral \n");
+			printf(" -show_exmp [num_exmp] \n -show_cross_points \n -show_iterations \n -get_integral \n");
 		}
 		else if (!strcmp(argv[1], "-show_exmp")) {
 			if (!strcmp(argv[2], "1")) {
@@ -143,9 +143,9 @@ int main(int argc, char **argv) {
 		}
 		else {
 			int it1, it2, it3;
-			double p1 = get_root(f1, df1, f2, df2, 0, 100, 0.00001, &it1);
-			double p2 = get_root(f2, df2, f3, df3, 0, 100, 0.00001, &it2);
-			double p3 = get_root(f1, df1, f3, df3, 0, 100, 0.00001, &it3);
+			double p1 = get_root(f1, df1, f2, df2, 0.1, 100, 0.00001, &it1);
+			double p2 = get_root(f2, df2, f3, df3, 0.1, 100, 0.00001, &it2);
+			double p3 = get_root(f1, df1, f3, df3, 0.1, 100, 0.00001, &it3);
 			if (!strcmp(argv[1], "-show_cross_points")) { 
 				printf("f1&f2: %lf f2&f3: %lf f1&f3: %lf", p1, p2, p3);
 			} else if (!strcmp(argv[1], "-show_iterations")) {
