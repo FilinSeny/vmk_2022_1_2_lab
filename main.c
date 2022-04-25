@@ -146,11 +146,11 @@ int main(int argc, char **argv) {
 			double p1 = get_root(f1, df1, f2, df2, 0, 100, 0.00001, &it1);
 			double p2 = get_root(f2, df2, f3, df3, 0, 100, 0.00001, &it2);
 			double p3 = get_root(f1, df1, f3, df3, 0, 100, 0.00001, &it3);
-			if (strcmp(argv[1], "-show_cross_points")) { 
+			if (!strcmp(argv[1], "-show_cross_points")) { 
 				printf("f1&f2: %lf f2&f3: %lf f1&f3: %lf", p1, p2, p3);
 			} else if (!strcmp(argv[1], "-show_iterations")) {
 				printf("f1&f2:%d, f2&f3 %d, f3&f1 %d", it1, it2, it3); 
-			} else if (!strcmp(argv[1], "get_integral")) {
+			} else if (!strcmp(argv[1], "-get_integral")) {
 				int it;
 				double res = get_integral(f1, f3, p3, p2, 0.00001, &it);
 				res += get_integral(f1, f2, p2, p1, 0.00001, &it);

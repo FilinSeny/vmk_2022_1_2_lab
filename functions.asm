@@ -11,15 +11,15 @@ section .data
     c6 dq -5.0
 
 section .text
-global F1
-global F2
-global F3
-global DF1
-global DF2
-global DF3
+global f1
+global f2
+global f3
+global df1
+global df2
+global df3
 
 ;3(0.5/(x+1) + 1)
-F1:
+f1:
     push ebp
     mov ebp, esp
     
@@ -49,7 +49,7 @@ F1:
     
   
 ;-1.5(1/(x + 1)^2) 1 x 1 + x 1 + / 1.5 * 
-DF1:
+df1:
     push ebp,
     mov ebp, esp
     
@@ -75,7 +75,7 @@ DF1:
     
 
 ;2.5*x - 9.5   
-F2:
+f2:
     push ebp
     mov ebp, esp
     
@@ -90,7 +90,7 @@ F2:
     pop ebp
     ret
 
-DF2:
+df2:
     push ebp
     mov ebp, esp
     
@@ -104,7 +104,7 @@ DF2:
     
 ;5/x
 
-F3:
+f3:
     push ebp
     mov ebp, esp
     
@@ -118,7 +118,7 @@ F3:
     ret
     
     
-DF3:
+df3:
     push ebp
     mov ebp, esp
     
