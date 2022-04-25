@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 ///f1 = 3 (0.5 / (x + 1) + 1)   f' = 1.5/(x+1)^2
 ///f2 = 2.5x − 9.5              f' = 2.5
 ///f3 = 5 / x                   f' = 5/x^2
-extern double f1(double);
-extern double dfq(double);
+extern  double f1(double);
+extern double df1(double);
 extern double f2(double);
 extern double df2(double);
 extern double f3(double);
@@ -118,7 +119,46 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
 }
 
 
-int main() {
+int main(int argc, char **argv) {
+	if (argc > 0) {
+		if (!strcmp(argv[1], "-help")) { 
+			printf(" -show_exm [num_exmp] \n -show_cross_points \n -show_iterations \n -get_integral \n");
+		}
+		else if (!strcmp(argv[1], "-show_exmp")) {
+			if (!strcmp(argv[2], "1")) {
+				int it = 0;
+				printf("f1: x^2 \n f2: x");
+				double p1 = get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it);
+				double p2 = get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it);  
+				printf("roots : %lf %lf \n", p1, p2);
+				printf("I: %lf", get_integral(exmp1, exmp2, p1, p2, 0.00001, &it));
+			} else if (!strcmp(argv[2], "2")) {
+				int it = 0;
+				printf("f1 : x^2 - 5x + 6 \n f2:exp(x^2 - 3) \n");
+				double p1 = get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it);
+				double p2 = get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it);
+				printf("roots : %lf %lf \n", p1, p2);
+				printf("I: %lf", get_integral(exmp3, exmp4, p1, p2, 0.00001, &it)); 
+			}
+		}
+		else {
+			int it1, it2, it3;
+			double p1 = get_root(f1, df1, f2, df2, 0, 100, 0.00001, &it1);
+			double p2 = get_root(f2, df2, f3, df3, 0, 100, 0.00001, &it2);
+			double p3 = get_root(f1, df1, f3, df3, 0, 100, 0.00001, &it3);
+			if (strcmp(argv[1], "-show_cross_points")) { 
+				printf("f1&f2: %lf f2&f3: %lf f1&f3: %lf", p1, p2, p3);
+			} else if (!strcmp(argv[1], "-show_iterations")) {
+				printf("f1&f2:%d, f2&f3 %d, f3&f1 %d", it1, it2, it3); 
+			} else if (!strcmp(argv[1], "get_integral")) {
+				int it;
+				double res = get_integral(f1, f3, p3, p2, 0.00001, &it);
+				res += get_integral(f1, f2, p2, p1, 0.00001, &it);
+				printf("I: %lf", res);
+			}
+		} 
+	}
+	/*
     int it = 0;
     double p1 =  get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it);
     double p2 =  get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it);
@@ -131,5 +171,6 @@ int main() {
                                   get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it),
                                   get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it),
                                   0.00001, &it));
-    return 0;
+   */
+	 return 0;
 }
