@@ -32,16 +32,16 @@ f1:
     fld qword[c0]
     fld qword[x]
     fdivp
-    ;fstp qword[x]
-    ;fld qword[x]
+   
+   
     fld1
     faddp
-    ;fstp qword[x]
-    ;fld qword[x]
+   
+   
     fld qword[c1]
     fmulp
-    ;fstp qword[x]
-    ;fld qword[x]
+   
+   
     
     mov esp, ebp
     pop ebp
@@ -58,14 +58,12 @@ df1:
     fld qword[ebp + 8]
     fld1
     faddp
-    fstp qword[x]
-    fld qword[x]
-    fld qword[x]
-    
-    fmulp
-    ;fst qword[x]
+	fstp qword[ebp + 8]
+	
+    fld qword[ebp+8]
+	fld qword[ebp+8]
+    fmulp   
     fdivp
-    ;fst qword[x]
     fld qword[c2]
     fmul
     

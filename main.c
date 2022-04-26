@@ -48,7 +48,7 @@ double dexmp4 (double x) {
 double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), double (*gd)(double), double a, double b, const double e, int* iteratinon) {
     double F_a = f(a) - g(a);
     double F_b = f(b) - g(b);
-
+	(*iteratinon) = 0;
 
 
     while (fabs(a - b) > e) {
@@ -120,19 +120,25 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
 
 
 int main(int argc, char **argv) {
-	if (argc > 0) {
-		if (!strcmp(argv[1], "-help")) { 
-			printf(" -show_exmp [num_exmp] \n -show_cross_points \n -show_iterations \n -get_integral \n");
+	int i = 1;
+	int flag = 0;
+	if (argc == 1) {
+		flag = 1;
+	}
+	while (i < argc || flag) {
+		if (!flag && !strcmp(argv[i+0], "-help")) { 
+			printf(" -help \n -show_exmp [num_exmp] \n -show_cross_points \n -show_iterations \n -get_integral \n");
+			++i;
 		}
-		else if (!strcmp(argv[1], "-show_exmp")) {
-			if (!strcmp(argv[2], "1")) {
+		else if (!flag && !strcmp(argv[i+0], "-show_exmp")) {
+			if (!strcmp(argv[i+1], "1")) {
 				int it = 0;
-				printf("f1: x^2 \n f2: x");
+				printf("f1: x^2 \n f2: x \n ");
 				double p1 = get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it);
 				double p2 = get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it);  
 				printf("roots : %lf %lf \n", p1, p2);
 				printf("I: %lf", get_integral(exmp1, exmp2, p1, p2, 0.00001, &it));
-			} else if (!strcmp(argv[2], "2")) {
+			} else if (!flag && !strcmp(argv[i+1], "2")) {
 				int it = 0;
 				printf("f1 : x^2 - 5x + 6 \n f2:exp(x^2 - 3) \n");
 				double p1 = get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it);
@@ -140,37 +146,28 @@ int main(int argc, char **argv) {
 				printf("roots : %lf %lf \n", p1, p2);
 				printf("I: %lf", get_integral(exmp3, exmp4, p1, p2, 0.00001, &it)); 
 			}
+			i += 2;
 		}
 		else {
 			int it1, it2, it3;
 			double p1 = get_root(f1, df1, f2, df2, 0.1, 100, 0.00001, &it1);
 			double p2 = get_root(f2, df2, f3, df3, 0.1, 100, 0.00001, &it2);
 			double p3 = get_root(f1, df1, f3, df3, 0.1, 100, 0.00001, &it3);
-			if (!strcmp(argv[1], "-show_cross_points")) { 
+			if (!flag && !strcmp(argv[i+0], "-show_cross_points")) { 
 				printf("f1&f2: %lf f2&f3: %lf f1&f3: %lf", p1, p2, p3);
-			} else if (!strcmp(argv[1], "-show_iterations")) {
-				printf("f1&f2:%d, f2&f3 %d, f3&f1 %d", it1, it2, it3); 
-			} else if (!strcmp(argv[1], "-get_integral")) {
+				++i;
+			} else if (!flag && !strcmp(argv[i+0], "-show_iterations")) {
+				printf("f1&f2:%d, f2&f3 %d, f3&f1 %d", it1, it2, it3);
+				++i; 
+			} else if (flag || !strcmp(argv[i+0], "-get_integral")) {
 				int it;
 				double res = get_integral(f1, f3, p3, p2, 0.00001, &it);
 				res += get_integral(f1, f2, p2, p1, 0.00001, &it);
 				printf("I: %lf", res);
+				++i;
+				flag = 0;
 			}
 		} 
 	}
-	/*
-    int it = 0;
-    double p1 =  get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it);
-    double p2 =  get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it);
-    printf("%lf ", get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it));
-    printf("%lf \n", get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it));
-    printf("%lf \n", get_integral(exmp1, exmp2, p1, p2,0.00001, &it));
-    printf("%lf ", get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it));
-    printf("%lf \n", get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it));
-    printf("%lf \n", get_integral(exmp3, exmp4,
-                                  get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it),
-                                  get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it),
-                                  0.00001, &it));
-   */
 	 return 0;
 }

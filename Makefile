@@ -12,4 +12,4 @@ functions.o: functions.asm
 	nasm -f elf32 -o functions.o functions.asm
 
 task_6: main.o functions.o
-	gcc -lm -m32 -o task_6 main.o functions.o
+	gcc  -m32 -o task_6 main.o functions.o -lm
