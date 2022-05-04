@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+const double Eps = 0.00001;
 
 ///f1 = 3 (0.5 / (x + 1) + 1)   f' = 1.5/(x+1)^2
 ///f2 = 2.5x − 9.5              f' = 2.5
@@ -84,19 +85,19 @@ double get_root(double (*f)(double), double (*fd)(double), double (*g)(double), 
 }
 
 
-double get_integral(double (*f)(double), double (*g)(double), const double a, const double b, double eps, int * iterations) {
+double get_integral(double (*f)(double), const double a, const double b, double eps, int * iterations) {
     int n= 10;
     *iterations = 0;
     double sum_0 = 0;
     double sum_1 = 0;
-    double F_0 = f(a) - g(a);
-    double F_n = f(b) - g(b);
+    double F_0 = f(a);
+    double F_n = f(b);
     double h = (b - a) / n;
     for (int i = 1; i < 10; ++i) {
         if (i % 2 == 0) {
-            sum_0 += f(a + i*h) - g(a + i*h);
+            sum_0 += f(a + i*h);
         } else {
-            sum_1 += f(a + i*h) - g(a + i*h);
+            sum_1 += f(a + i*h);
         }
     }
 
@@ -110,7 +111,7 @@ double get_integral(double (*f)(double), double (*g)(double), const double a, co
         h = (b - a) / n;
         sum_1 = 0;
         for (int i = 1; i < n; i += 2) {
-            sum_1 += f(a + i*h) - g(a + i*h);
+            sum_1 += f(a + i*h);
         }
         I_2n = h/3 * (F_0 + 4 * sum_1 + 2 * sum_0 + F_n);
     } while (1/15 * fabs(I_n - I_2n) > eps);
@@ -134,25 +135,25 @@ int main(int argc, char **argv) {
 			if (!strcmp(argv[i+1], "1")) {
 				int it = 0;
 				printf("f1: x^2 \n f2: x \n ");
-				double p1 = get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, 0.00001, &it);
-				double p2 = get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, 0.00001, &it);  
+				double p1 = get_root(exmp1, dexmp1, exmp2, dexmp2, -0.1, 0.1, Eps, &it);
+				double p2 = get_root(exmp1, dexmp1, exmp2, dexmp2, 0.1, 10, Eps, &it);  
 				printf("roots : %lf %lf \n", p1, p2);
-				printf("I: %lf", get_integral(exmp1, exmp2, p1, p2, 0.00001, &it));
+				printf("I: %lf", get_integral(exmp1, p1, p2, Eps, &it) - get_integral(exmp2, p1, p2, Eps, &it));
 			} else if (!flag && !strcmp(argv[i+1], "2")) {
 				int it = 0;
 				printf("f1 : x^2 - 5x + 6 \n f2:exp(x^2 - 3) \n");
-				double p1 = get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, 0.00001, &it);
-				double p2 = get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, 0.00001, &it);
+				double p1 = get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, Eps, &it);
+				double p2 = get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, Eps, &it);
 				printf("roots : %lf %lf \n", p1, p2);
-				printf("I: %lf", get_integral(exmp3, exmp4, p1, p2, 0.00001, &it)); 
+				printf("I: %lf", get_integral(exmp3, p1, p2, Eps, &it) - get_integral(exmp4, p1, p2, Eps, &it)); 
 			}
 			i += 2;
 		}
 		else {
 			int it1, it2, it3;
-			double p1 = get_root(f1, df1, f2, df2, 0.1, 100, 0.00001, &it1);
-			double p2 = get_root(f2, df2, f3, df3, 0.1, 100, 0.00001, &it2);
-			double p3 = get_root(f1, df1, f3, df3, 0.1, 100, 0.00001, &it3);
+			double p1 = get_root(f1, df1, f2, df2, 0.1, 100, Eps, &it1);
+			double p2 = get_root(f2, df2, f3, df3, 0.1, 100, Eps, &it2);
+			double p3 = get_root(f1, df1, f3, df3, 0.1, 100, Eps, &it3);
 			if (!flag && !strcmp(argv[i+0], "-show_cross_points")) { 
 				printf("f1&f2: %lf f2&f3: %lf f1&f3: %lf", p1, p2, p3);
 				++i;
@@ -160,9 +161,9 @@ int main(int argc, char **argv) {
 				printf("f1&f2:%d, f2&f3 %d, f3&f1 %d", it1, it2, it3);
 				++i; 
 			} else if (flag || !strcmp(argv[i+0], "-get_integral")) {
-				int it;
-				double res = get_integral(f1, f3, p3, p2, 0.00001, &it);
-				res += get_integral(f1, f2, p2, p1, 0.00001, &it);
+				int it = 0;
+				double res = get_integral(f1, p3, p2, Eps, &it) - get_integral(f3, p3, p2, Eps, &it);
+				res += get_integral(f1, p2, p1, Eps, &it) - get_integral(f2, p2, p1, Eps, &it);
 				printf("I: %lf", res);
 				++i;
 				flag = 0;
