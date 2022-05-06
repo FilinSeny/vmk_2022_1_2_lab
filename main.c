@@ -14,6 +14,11 @@ extern double f3(double);
 extern double df3(double);
 
 
+double exmp0(double x) {
+	return 0;
+}
+
+
 double exmp1(double x) {
     return x * x;
 }
@@ -31,11 +36,11 @@ double dexmp2(double x) {
 }
 
 double exmp3 (double x) {
-    return x*x - 5*x + 6;
+    return x*x - 6;
 }
 
 double dexmp3 (double x) {
-    return 2*x - 5;
+    return 2*x;
 }
 
 double exmp4 (double x) {
@@ -146,6 +151,13 @@ int main(int argc, char **argv) {
 				double p2 = get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, Eps, &it);
 				printf("roots : %lf %lf \n", p1, p2);
 				printf("I: %lf", get_integral(exmp3, p1, p2, Eps, &it) - get_integral(exmp4, p1, p2, Eps, &it)); 
+			} else if (!flag && !strcmp(argv[i+1], "3")) {
+				int it = 0;
+				printf("f1 : x^2 - 6");
+				double p1 = get_root(exmp3, dexmp3, exmp0, exmp0, -100, 0, Eps, &it);
+				double p2 = get_root(exmp3, dexmp3, exmp0, exmp0, 0, 100, Eps, &it);
+				printf("roots : %lf, %lf \n", p1, p2);
+				printf("I: %lf \n",fabs(get_integral(exmp3, p1, p2, Eps, &it)));
 			}
 			i += 2;
 		}
