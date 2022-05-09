@@ -36,15 +36,15 @@ double dexmp2(double x) {
 }
 
 double exmp3 (double x) {
-    return x*x - 6;
+    return x*x -5*x -  6;
 }
 
 double dexmp3 (double x) {
-    return 2*x;
+    return 2*x - 5;
 }
 
 double exmp4 (double x) {
-    return exp(x*x - 3);
+    return exp(x*x - 3) - 10;
 }
 
 double dexmp4 (double x) {
@@ -146,16 +146,16 @@ int main(int argc, char **argv) {
 				printf("I: %lf", get_integral(exmp1, p1, p2, Eps, &it) - get_integral(exmp2, p1, p2, Eps, &it));
 			} else if (!flag && !strcmp(argv[i+1], "2")) {
 				int it = 0;
-				printf("f1 : x^2 - 5x + 6 \n f2:exp(x^2 - 3) \n");
-				double p1 = get_root(exmp3, dexmp3, exmp4, dexmp4, -5, 0, Eps, &it);
-				double p2 = get_root(exmp3, dexmp3, exmp4, dexmp4, 0, 10, Eps, &it);
+				printf("f1 : x^2 - 5x - 6 \n f2:0  \n");
+				double p1 = get_root(exmp3, dexmp3, exmp0, exmp0, -1000, 0, Eps, &it);
+				double p2 = get_root(exmp3, dexmp3, exmp0, exmp0, 0, 1000, Eps, &it);
 				printf("roots : %lf %lf \n", p1, p2);
-				printf("I: %lf", get_integral(exmp3, p1, p2, Eps, &it) - get_integral(exmp4, p1, p2, Eps, &it)); 
+				printf("I: %lf", get_integral(exmp3, p1, p2, Eps, &it) - get_integral(exmp0, p1, p2, Eps, &it)); 
 			} else if (!flag && !strcmp(argv[i+1], "3")) {
 				int it = 0;
-				printf("f1 : x^2 - 6");
-				double p1 = get_root(exmp3, dexmp3, exmp0, exmp0, -100, 0, Eps, &it);
-				double p2 = get_root(exmp3, dexmp3, exmp0, exmp0, 0, 100, Eps, &it);
+				printf("f1 : e^(x^2 - 3) - 10");
+				double p1 = get_root(exmp4, dexmp4, exmp0, exmp0, -100, 0, Eps, &it);
+				double p2 = get_root(exmp4, dexmp4, exmp0, exmp0, 0, 100, Eps, &it);
 				printf("roots : %lf, %lf \n", p1, p2);
 				printf("I: %lf \n",fabs(get_integral(exmp3, p1, p2, Eps, &it)));
 			}
