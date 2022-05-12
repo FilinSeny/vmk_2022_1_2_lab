@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-const double Eps1 = 0.00001;
-const double Eps2 = 0.001;
+const double Eps1 = 0.000001;
+const double Eps2 = 0.00025;
 
 ///f1 = 3 (0.5 / (x + 1) + 1)   f' = 1.5/(x+1)^2
 ///f2 = 2.5x − 9.5              f' = 2.5
